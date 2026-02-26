@@ -5,6 +5,7 @@ import { AdminModal } from "../components/AdminModal";
 import { AdminErrorAlert } from "../components/AdminErrorAlert";
 import { AdminDeleteConfirmModal } from "../components/AdminDeleteConfirmModal";
 import { AdminSkeleton } from "../components/AdminSkeleton";
+import { useScrollToTopOnPageChange } from "../useScrollToTopOnPageChange";
 
 type SortKey = "name" | "price" | "flags" | "createdAt" | "updatedAt";
 type SortOrder = "asc" | "desc";
@@ -19,6 +20,15 @@ function flagsLabel(m: ApiModel): string {
 function filenameFromUrl(url: string): string {
   const parts = url.split("/");
   return parts[parts.length - 1]?.trim() || url;
+}
+
+/** Safe numeric timestamp for sorting (handles missing, null, invalid, or number) */
+function getDateSortKey(m: ApiModel, key: "createdAt" | "updatedAt"): number {
+  const v = m[key];
+  if (v == null) return 0;
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  const t = new Date(v as string).getTime();
+  return Number.isFinite(t) ? t : 0;
 }
 
 export function AdminModelsPage() {
@@ -38,6 +48,8 @@ export function AdminModelsPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const pageSize = 10;
+
+  useScrollToTopOnPageChange(currentPage);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -83,13 +95,9 @@ export function AdminModelsPage() {
         const bp = typeof b.price === "number" ? b.price : b.price != null ? Number(b.price) : -Infinity;
         cmp = ap - bp;
       } else if (sortKey === "createdAt") {
-        const at = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const bt = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        cmp = at - bt;
+        cmp = getDateSortKey(a, "createdAt") - getDateSortKey(b, "createdAt");
       } else if (sortKey === "updatedAt") {
-        const at = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-        const bt = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-        cmp = at - bt;
+        cmp = getDateSortKey(a, "updatedAt") - getDateSortKey(b, "updatedAt");
       } else {
         cmp = flagsLabel(a).localeCompare(flagsLabel(b), undefined, { sensitivity: "base" });
       }
@@ -105,10 +113,6 @@ export function AdminModelsPage() {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
 
   const paginatedModels = useMemo(
     () => filteredAndSorted.slice((currentPage - 1) * pageSize, currentPage * pageSize),

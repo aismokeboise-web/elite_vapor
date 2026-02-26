@@ -5,6 +5,7 @@ import { AdminModal } from "../components/AdminModal";
 import { AdminErrorAlert } from "../components/AdminErrorAlert";
 import { AdminDeleteConfirmModal } from "../components/AdminDeleteConfirmModal";
 import { AdminSkeleton } from "../components/AdminSkeleton";
+import { useScrollToTopOnPageChange } from "../useScrollToTopOnPageChange";
 
 type SortKey = "name" | "createdAt" | "updatedAt";
 type SortOrder = "asc" | "desc";
@@ -26,6 +27,8 @@ export function AdminCategoriesPage() {
   const [deleting, setDeleting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  useScrollToTopOnPageChange(currentPage);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -68,9 +71,6 @@ export function AdminCategoriesPage() {
   useEffect(() => {
     if (currentPage > totalPages) setCurrentPage(totalPages);
   }, [currentPage, totalPages]);
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
   const paginatedCategories = useMemo(
     () => filteredAndSorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
     [filteredAndSorted, currentPage]
