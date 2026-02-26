@@ -33,7 +33,7 @@ jobs:
             # Build server
             cd server
             npm ci || npm install
-	    npx prisma generate
+            npx prisma generate
             npm run build
             
 
