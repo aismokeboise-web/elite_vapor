@@ -1,0 +1,91 @@
+generator client {
+  provider   = "prisma-client-js"
+  // Force the classic query engine so we don't need
+  // an Accelerate adapter/accelerateUrl in PrismaClient.
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Brand {
+  id         String   @id @default(cuid())
+  name       String
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  products Product[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  brands    Brand[]
+}
+
+model Product {
+  id   String @id @default(cuid())
+  name String
+
+  size String?
+
+  nicotineStrength String?
+
+  // IDs of models associated with this product (Model.id), stored as array
+  modelIds String[] @default([])
+
+  // One brand per product
+  brandId   String?
+  brand     Brand?   @relation(fields: [brandId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+}
+
+model Model {
+  id          String   @id @default(cuid())
+  name        String
+  price       Decimal? @db.Decimal(10, 2)
+  description String?
+  flavors     String[] @default([])
+
+  // Merchandising flags moved from Product
+  is_clearance   Boolean   @default(false)
+  is_deal        Boolean   @default(false)
+  deal_text      String?   @default("Exclusive Deals Available")
+  is_best_seller Boolean   @default(false)
+  is_new         Boolean   @default(false)
+
+  // Up to 3 images for this model
+  imageUrls  String[]  @default([])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscription {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Admin {
+  /// Unique username for logging into the admin area
+  username String @id
+  /// Email for the admin account (required)
+  email    String @default("abc.example.com")
+  /// Hashed password (bcrypt)
+  password String
+}
