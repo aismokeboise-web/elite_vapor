@@ -9,7 +9,13 @@ sudo chown -R root:root /var/www/empire
 cd /var/www/empire
 git clone YOUR_GITHUB_REPO_URL .
 
-CREATE DATABASE elite_prod;
-CREATE USER elite_user WITH PASSWORD 'STRONG_PASSWORD_HERE';
-GRANT ALL PRIVILEGES ON DATABASE elite_prod TO elite_user;
+CREATE DATABASE empire_prod;
+CREATE USER empire_user WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE empire_prod TO empire_user;
 \q
+
+cd /var/www/empire/server
+nano .env.production
+
+git config --global user.name "Empire Web"
+git config --global user.email "aismokeboise@gmail.com"
