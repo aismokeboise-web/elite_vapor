@@ -27,8 +27,8 @@ jobs:
 
             # Pull latest code
             git fetch --all
-            git checkout master
-            git pull origin master
+            git checkout main
+            git pull origin main
 
             # Build server
             cd server
