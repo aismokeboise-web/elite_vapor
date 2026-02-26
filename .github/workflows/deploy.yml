@@ -27,8 +27,8 @@ jobs:
 
             # Pull latest code
             git fetch --all
-            git checkout main
-            git pull origin main
+            git checkout master
+            git pull origin master
 
             # Build server
             cd server
@@ -41,6 +41,7 @@ jobs:
             # Build client
             cd ../client
             npm ci || npm install
+	    npx prisma generate	
             npm run build
 
             # Restart Node server via PM2
