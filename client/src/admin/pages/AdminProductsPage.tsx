@@ -16,6 +16,7 @@ import { AdminModal } from "../components/AdminModal";
 import { AdminErrorAlert } from "../components/AdminErrorAlert";
 import { AdminDeleteConfirmModal } from "../components/AdminDeleteConfirmModal";
 import { AdminSkeleton } from "../components/AdminSkeleton";
+import { useScrollToTopOnPageChange } from "../useScrollToTopOnPageChange";
 
 type SortKey = "name" | "size" | "brand" | "models" | "createdAt" | "updatedAt";
 type SortOrder = "asc" | "desc";
@@ -39,6 +40,8 @@ export function AdminProductsPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const pageSize = 10;
+
+  useScrollToTopOnPageChange(currentPage);
 
   const load = useCallback(() => {
     setLoading(true);

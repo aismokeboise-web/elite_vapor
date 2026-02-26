@@ -5,6 +5,7 @@ import type { ApiNewsletterSubscription } from "../../api/client";
 import { AdminDeleteConfirmModal } from "../components/AdminDeleteConfirmModal";
 import { AdminErrorAlert } from "../components/AdminErrorAlert";
 import { AdminSkeleton } from "../components/AdminSkeleton";
+import { useScrollToTopOnPageChange } from "../useScrollToTopOnPageChange";
 
 type SortKey = "email" | "createdAt";
 type SortOrder = "asc" | "desc";
@@ -22,6 +23,8 @@ export function AdminNewsletterPage() {
   const [unsubscribeTarget, setUnsubscribeTarget] = useState<ApiNewsletterSubscription | null>(null);
   const [unsubscribing, setUnsubscribing] = useState(false);
   const auth = getAdminAuth();
+
+  useScrollToTopOnPageChange(currentPage);
 
   const load = useCallback(() => {
     if (!auth?.token) return;
@@ -73,9 +76,6 @@ export function AdminNewsletterPage() {
   useEffect(() => {
     if (currentPage > totalPages) setCurrentPage(totalPages);
   }, [currentPage, totalPages]);
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
   const paginatedSubs = useMemo(
     () => filteredAndSorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
     [filteredAndSorted, currentPage]
