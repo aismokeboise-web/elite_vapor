@@ -22,13 +22,19 @@ function filenameFromUrl(url: string): string {
   return parts[parts.length - 1]?.trim() || url;
 }
 
-/** Safe numeric timestamp for sorting (handles missing, null, invalid, or number) */
+/** Safe numeric timestamp for sorting (handles missing, null, invalid, or number).
+ * Tries both camelCase and snake_case in case the API or proxy normalizes keys. */
 function getDateSortKey(m: ApiModel, key: "createdAt" | "updatedAt"): number {
-  const v = m[key];
+  const rec = m as unknown as Record<string, unknown>;
+  const snake = key === "createdAt" ? "created_at" : "updated_at";
+  const v = rec[key] ?? rec[snake];
   if (v == null) return 0;
   if (typeof v === "number" && Number.isFinite(v)) return v;
-  const t = new Date(v as string).getTime();
-  return Number.isFinite(t) ? t : 0;
+  if (typeof v === "string") {
+    const t = new Date(v).getTime();
+    return Number.isFinite(t) ? t : 0;
+  }
+  return 0;
 }
 
 export function AdminModelsPage() {
@@ -101,7 +107,8 @@ export function AdminModelsPage() {
       } else {
         cmp = flagsLabel(a).localeCompare(flagsLabel(b), undefined, { sensitivity: "base" });
       }
-      return sortOrder === "asc" ? cmp : -cmp;
+      if (cmp !== 0) return sortOrder === "asc" ? cmp : -cmp;
+      return (a.id ?? "").localeCompare(b.id ?? "", undefined, { sensitivity: "base" });
     });
     return list;
   }, [models, filter, filterFlags, sortKey, sortOrder]);
