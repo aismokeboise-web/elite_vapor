@@ -239,7 +239,7 @@ export function AdminModelsPage() {
       </div>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {paginatedModels.length === 0
@@ -256,7 +256,8 @@ export function AdminModelsPage() {
               disabled={currentPage === 1}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Previous
+              <span className="inline sm:hidden" aria-hidden="true">←</span>
+              <span className="hidden sm:inline">Previous</span>
             </button>
             <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -280,7 +281,8 @@ export function AdminModelsPage() {
               disabled={currentPage === totalPages}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Next
+              <span className="inline sm:hidden" aria-hidden="true">→</span>
+              <span className="hidden sm:inline">Next</span>
             </button>
           </div>
         </div>
@@ -375,7 +377,7 @@ export function AdminModelsPage() {
       </ul>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {paginatedModels.length === 0
@@ -392,7 +394,8 @@ export function AdminModelsPage() {
               disabled={currentPage === 1}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Previous
+              <span className="inline sm:hidden" aria-hidden="true">←</span>
+              <span className="hidden sm:inline">Previous</span>
             </button>
             <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -416,7 +419,8 @@ export function AdminModelsPage() {
               disabled={currentPage === totalPages}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Next
+              <span className="inline sm:hidden" aria-hidden="true">→</span>
+              <span className="hidden sm:inline">Next</span>
             </button>
           </div>
         </div>

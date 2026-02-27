@@ -7,6 +7,10 @@ import { useEffect } from "react";
  */
 export function useScrollToTopOnPageChange(currentPage: number) {
   useEffect(() => {
-    document.querySelector("main")?.scrollTo(0, 0);
+    const adminMain = document.getElementById("admin-main");
+    if (adminMain) {
+      adminMain.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 }

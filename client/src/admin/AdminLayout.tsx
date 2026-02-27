@@ -77,7 +77,7 @@ export function AdminLayout() {
           sidebarOpen ? "translate-x-0 lg:w-64" : "-translate-x-full lg:w-0 lg:overflow-hidden"
         }`}
       >
-        <div className="sticky top-0 flex w-64 flex-col min-h-screen">
+        <div className="sticky top-0 flex w-64 flex-col lg:min-h-screen">
           <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-600 bg-slate-800 text-white">
             <h1 className="text-sm font-semibold tracking-tight md:text-base">
               Admin
@@ -91,7 +91,7 @@ export function AdminLayout() {
               <CloseIcon className="h-5 w-5" />
             </button>
           </div>
-          <nav className="flex-1 px-2 py-3 flex flex-col gap-0.5 bg-slate-100">
+          <nav className="px-2 py-2 sm:py-3 flex flex-col gap-0.5 bg-slate-100 lg:flex-1">
             {NAV_ITEMS.map(({ to, label }) => (
               <NavLink
                 key={to}
@@ -108,7 +108,7 @@ export function AdminLayout() {
               </NavLink>
             ))}
           </nav>
-          <div className="p-3 border-t border-slate-300 bg-slate-200">
+          <div className="px-3 py-2 sm:p-3 border-t border-slate-300 bg-slate-200">
             <button
               type="button"
               onClick={handleLogout}
@@ -119,7 +119,12 @@ export function AdminLayout() {
           </div>
         </div>
       </aside>
-      <main className="flex-1 min-h-0 overflow-auto px-6 sm:px-8 py-8 bg-gradient-to-br from-slate-300 via-slate-200 to-slate-300 text-base flex flex-col">
+      <main
+        id="admin-main"
+        className={`flex-1 min-h-0 px-6 sm:px-8 py-8 bg-gradient-to-br from-slate-300 via-slate-200 to-slate-300 text-base flex flex-col ${
+          sidebarOpen ? "overflow-hidden" : "overflow-auto"
+        } lg:overflow-auto`}
+      >
         <div className="rounded-2xl border border-slate-300 bg-white px-6 py-6 shadow-lg sm:px-8 sm:py-8">
           <Outlet />
         </div>

@@ -101,9 +101,6 @@ export function AdminBrandsPage() {
   useEffect(() => {
     if (currentPage > totalPages) setCurrentPage(totalPages);
   }, [currentPage, totalPages]);
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
   const paginatedBrands = useMemo(
     () => filteredAndSorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
     [filteredAndSorted, currentPage]
@@ -182,7 +179,7 @@ export function AdminBrandsPage() {
       </div>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {(currentPage - 1) * PAGE_SIZE + 1}
@@ -197,7 +194,8 @@ export function AdminBrandsPage() {
               disabled={currentPage === 1}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Previous
+              <span className="inline sm:hidden" aria-hidden="true">←</span>
+              <span className="hidden sm:inline">Previous</span>
             </button>
             <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -221,13 +219,61 @@ export function AdminBrandsPage() {
               disabled={currentPage === totalPages}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Next
+              <span className="inline sm:hidden" aria-hidden="true">→</span>
+              <span className="hidden sm:inline">Next</span>
             </button>
           </div>
         </div>
       )}
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-300 bg-white shadow-sm">
+      {/* Mobile: card layout to avoid horizontal scrolling */}
+      <div className="mt-6 space-y-3 sm:hidden">
+        {paginatedBrands.map((b) => (
+          <div key={b.id} className="rounded-2xl border border-slate-300 bg-white p-4 shadow-sm">
+            <h2 className="text-base font-semibold text-slate-900">{b.name}</h2>
+            <p className="mt-1 text-xs text-slate-600">
+              <span className="font-semibold text-slate-700">Category: </span>
+              {(b.categoryId && categoryMap.get(b.categoryId)) ?? "No category"}
+            </p>
+            <dl className="mt-2 space-y-1 text-xs text-slate-700">
+              <div className="flex items-center justify-between gap-2">
+                <dt className="font-medium text-slate-600">Created</dt>
+                <dd className="text-right">
+                  {b.createdAt ? new Date(b.createdAt).toLocaleString() : "None"}
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <dt className="font-medium text-slate-600">Updated</dt>
+                <dd className="text-right">
+                  {b.updatedAt ? new Date(b.updatedAt).toLocaleString() : "None"}
+                </dd>
+              </div>
+            </dl>
+            <div className="mt-3 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditBrand(b);
+                  setSubmitError(null);
+                }}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteBrandTarget(b)}
+                className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-50"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tablet / desktop: keep table layout with horizontal scroll if needed */}
+      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-300 bg-white shadow-sm hidden sm:block">
         <table className="w-full border-collapse text-base">
           <thead className="bg-slate-100">
             <tr className="text-slate-600">
@@ -258,9 +304,15 @@ export function AdminBrandsPage() {
             {paginatedBrands.map((b) => (
               <tr key={b.id} className="border-t border-slate-200">
                 <td className="px-5 py-3 font-medium text-slate-800">{b.name}</td>
-                <td className="px-5 py-3 text-slate-600">{(b.categoryId && categoryMap.get(b.categoryId)) ?? "None"}</td>
-                <td className="px-5 py-3 text-slate-600 text-sm">{b.createdAt ? new Date(b.createdAt).toLocaleString() : "None"}</td>
-                <td className="px-5 py-3 text-slate-600 text-sm">{b.updatedAt ? new Date(b.updatedAt).toLocaleString() : "None"}</td>
+                <td className="px-5 py-3 text-slate-600">
+                  {(b.categoryId && categoryMap.get(b.categoryId)) ?? "None"}
+                </td>
+                <td className="px-5 py-3 text-slate-600 text-sm">
+                  {b.createdAt ? new Date(b.createdAt).toLocaleString() : "None"}
+                </td>
+                <td className="px-5 py-3 text-slate-600 text-sm">
+                  {b.updatedAt ? new Date(b.updatedAt).toLocaleString() : "None"}
+                </td>
                 <td className="px-5 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <button
@@ -289,7 +341,7 @@ export function AdminBrandsPage() {
       </div>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {(currentPage - 1) * PAGE_SIZE + 1}

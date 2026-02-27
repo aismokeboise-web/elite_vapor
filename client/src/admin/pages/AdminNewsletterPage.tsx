@@ -114,7 +114,7 @@ export function AdminNewsletterPage() {
       </div>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {(currentPage - 1) * PAGE_SIZE + 1}
@@ -129,7 +129,8 @@ export function AdminNewsletterPage() {
               disabled={currentPage === 1}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Previous
+              <span className="inline sm:hidden" aria-hidden="true">←</span>
+              <span className="hidden sm:inline">Previous</span>
             </button>
           <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -153,13 +154,42 @@ export function AdminNewsletterPage() {
               disabled={currentPage === totalPages}
               className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Next
+              <span className="inline sm:hidden" aria-hidden="true">→</span>
+              <span className="hidden sm:inline">Next</span>
             </button>
           </div>
         </div>
       )}
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-300 bg-white shadow-sm">
+      {/* Mobile: card layout to avoid horizontal scrolling */}
+      <div className="mt-6 space-y-3 sm:hidden">
+        {paginatedSubs.map((s) => (
+          <div key={s.id} className="rounded-2xl border border-slate-300 bg-white p-4 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-wide text-slate-600">Email</p>
+                <h2 className="mt-0.5 text-base font-semibold text-slate-900">{s.email}</h2>
+              </div>
+              <span className="text-[0.7rem] text-slate-500">
+                <span className="font-semibold text-slate-600">Subscribed at: </span>
+                {s.createdAt ? new Date(s.createdAt).toLocaleString() : "None"}
+              </span>
+            </div>
+            <div className="mt-3 flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => setUnsubscribeTarget(s)}
+                className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-50"
+              >
+                Unsubscribe
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tablet / desktop: keep table layout with horizontal scroll if needed */}
+      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-300 bg-white shadow-sm hidden sm:block">
         <table className="w-full border-collapse text-base">
           <thead className="bg-slate-100">
             <tr className="text-slate-600">
@@ -199,7 +229,7 @@ export function AdminNewsletterPage() {
       </div>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {(currentPage - 1) * PAGE_SIZE + 1}

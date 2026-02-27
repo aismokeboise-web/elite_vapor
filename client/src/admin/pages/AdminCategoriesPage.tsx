@@ -131,7 +131,7 @@ export function AdminCategoriesPage() {
       </div>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {(currentPage - 1) * PAGE_SIZE + 1}
@@ -139,15 +139,29 @@ export function AdminCategoriesPage() {
             {Math.min(currentPage * PAGE_SIZE, filteredAndSorted.length)} of{" "}
             {filteredAndSorted.length} categories
           </span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Previous
-            </button>
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Previous page"
+              >
+                <span className="inline sm:hidden" aria-hidden="true">←</span>
+                <span className="hidden sm:inline">Previous</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Next page"
+              >
+                <span className="inline sm:hidden" aria-hidden="true">→</span>
+                <span className="hidden sm:inline">Next</span>
+              </button>
+            </div>
             <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
@@ -164,19 +178,55 @@ export function AdminCategoriesPage() {
                 </button>
               ))}
             </div>
-            <button
-              type="button"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next
-            </button>
           </div>
         </div>
       )}
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-300 bg-white shadow-sm">
+      {/* Mobile: card layout to avoid horizontal scrolling */}
+      <div className="mt-6 space-y-3 sm:hidden">
+        {paginatedCategories.map((c) => (
+          <div key={c.id} className="rounded-2xl border border-slate-300 bg-white p-4 shadow-sm">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-wide text-slate-600">Category</p>
+            <h2 className="mt-0.5 text-base font-semibold text-slate-900">{c.name}</h2>
+            <dl className="mt-2 space-y-1 text-xs text-slate-700">
+              <div className="flex items-center justify-between gap-2">
+                <dt className="font-medium text-slate-600">Created</dt>
+                <dd className="text-right">
+                  {c.createdAt ? new Date(c.createdAt).toLocaleString() : "None"}
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <dt className="font-medium text-slate-600">Updated</dt>
+                <dd className="text-right">
+                  {c.updatedAt ? new Date(c.updatedAt).toLocaleString() : "None"}
+                </dd>
+              </div>
+            </dl>
+            <div className="mt-3 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditCategory(c);
+                  setSubmitError(null);
+                }}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteCategoryTarget(c)}
+                className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-50"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tablet / desktop: keep table layout with horizontal scroll if needed */}
+      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-300 bg-white shadow-sm hidden sm:block">
         <table className="w-full border-collapse text-base">
           <thead className="bg-slate-100">
             <tr className="text-slate-600">
@@ -202,8 +252,12 @@ export function AdminCategoriesPage() {
             {paginatedCategories.map((c) => (
               <tr key={c.id} className="border-t border-slate-200 bg-white">
                 <td className="px-5 py-3 font-medium text-slate-800">{c.name}</td>
-                <td className="px-5 py-3 text-slate-600 text-sm">{c.createdAt ? new Date(c.createdAt).toLocaleString() : "None"}</td>
-                <td className="px-5 py-3 text-slate-600 text-sm">{c.updatedAt ? new Date(c.updatedAt).toLocaleString() : "None"}</td>
+                <td className="px-5 py-3 text-slate-600 text-sm">
+                  {c.createdAt ? new Date(c.createdAt).toLocaleString() : "None"}
+                </td>
+                <td className="px-5 py-3 text-slate-600 text-sm">
+                  {c.updatedAt ? new Date(c.updatedAt).toLocaleString() : "None"}
+                </td>
                 <td className="px-5 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <button
@@ -232,7 +286,7 @@ export function AdminCategoriesPage() {
       </div>
 
       {filteredAndSorted.length > 0 && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:text-sm">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-xs font-medium text-slate-700 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <span className="text-[0.7rem] font-semibold tracking-tight text-slate-600 sm:text-xs">
             Showing{" "}
             {(currentPage - 1) * PAGE_SIZE + 1}
