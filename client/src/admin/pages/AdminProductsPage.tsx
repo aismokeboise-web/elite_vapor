@@ -183,14 +183,17 @@ export function AdminProductsPage() {
           className="w-full max-w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:max-w-md md:max-w-lg lg:max-w-xl"
         />
         <div className="flex items-center gap-2">
-          <label htmlFor="admin-products-category-filter" className="text-sm font-medium text-slate-700">
+          <label
+            htmlFor="admin-products-category-filter"
+            className="text-sm font-medium text-slate-700"
+          >
             Category:
           </label>
           <select
             id="admin-products-category-filter"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 md:px-3 md:py-1.5 md:text-sm lg:px-3 lg:py-2 lg:text-base"
           >
             <option value="">All categories</option>
             {categoryOptions.map(({ id, name }) => (

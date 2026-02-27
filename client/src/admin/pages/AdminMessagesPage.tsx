@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getAdminAuth } from "../auth";
-import { fetchAdminMessages, deleteAdminMessage, getFriendlyErrorMessage } from "../../api/client";
+import {
+  fetchAdminMessages,
+  deleteAdminMessage,
+  updateAdminMessageReadStatus,
+  getFriendlyErrorMessage,
+} from "../../api/client";
 import type { ApiMessage } from "../../api/client";
 import { AdminDeleteConfirmModal } from "../components/AdminDeleteConfirmModal";
 import { AdminErrorAlert } from "../components/AdminErrorAlert";
@@ -9,6 +14,7 @@ import { useScrollToTopOnPageChange } from "../useScrollToTopOnPageChange";
 
 type SortKey = "name" | "email" | "subject" | "createdAt";
 type SortOrder = "asc" | "desc";
+type StatusFilter = "all" | "read" | "unread";
 
 const PAGE_SIZE = 20;
 
@@ -22,31 +28,38 @@ export function AdminMessagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<ApiMessage | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const auth = getAdminAuth();
+  const token = auth?.token;
 
   useScrollToTopOnPageChange(currentPage);
 
   const load = useCallback(() => {
-    if (!auth?.token) return;
+    if (!token) return;
     setLoading(true);
     setError(null);
-    fetchAdminMessages(auth.token)
+    fetchAdminMessages(token)
       .then(setMessages)
       .catch((e) => setError(getFriendlyErrorMessage(e)))
       .finally(() => setLoading(false));
-  }, [auth?.token]);
+  }, [token]);
 
   useEffect(() => {
-    if (!auth?.token) {
+    if (!token) {
       setLoading(false);
       setError("Not authenticated");
       return;
     }
     load();
-  }, [auth?.token, load]);
+  }, [token, load]);
 
   const filteredAndSorted = useMemo(() => {
     let list = messages ?? [];
+    if (statusFilter === "read") {
+      list = list.filter((m) => m.isRead);
+    } else if (statusFilter === "unread") {
+      list = list.filter((m) => !m.isRead);
+    }
     const q = filter.trim().toLowerCase();
     if (q) {
       list = list.filter(
@@ -73,15 +86,7 @@ export function AdminMessagesPage() {
       return sortOrder === "asc" ? cmp : -cmp;
     });
     return list;
-  }, [messages, filter, sortKey, sortOrder]);
-
-  const toggleSort = (key: SortKey) => {
-    if (sortKey === key) setSortOrder((o) => (o === "asc" ? "desc" : "asc"));
-    else {
-      setSortKey(key);
-      setSortOrder("asc");
-    }
-  };
+  }, [messages, filter, sortKey, sortOrder, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / PAGE_SIZE));
   useEffect(() => {
@@ -114,7 +119,7 @@ export function AdminMessagesPage() {
         {filteredAndSorted.length} {(filteredAndSorted.length === 1) ? "message" : "messages"}
       </p>
 
-      <div className="mt-4">
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
           value={filter}
@@ -122,6 +127,44 @@ export function AdminMessagesPage() {
           placeholder="Search messages…"
           className="w-full max-w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:max-w-md lg:max-w-lg"
         />
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-slate-600 sm:text-sm">Status:</span>
+          <div className="inline-flex rounded-full border border-slate-300 bg-white p-0.5 text-xs sm:text-sm">
+            <button
+              type="button"
+              onClick={() => setStatusFilter("all")}
+              className={`rounded-full px-3 py-1 font-medium ${
+                statusFilter === "all"
+                  ? "bg-slate-800 text-slate-50"
+                  : "text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              All
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("unread")}
+              className={`rounded-full px-3 py-1 font-medium ${
+                statusFilter === "unread"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              Unread
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("read")}
+              className={`rounded-full px-3 py-1 font-medium ${
+                statusFilter === "read"
+                  ? "bg-emerald-600 text-white"
+                  : "text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              Read
+            </button>
+          </div>
+        </div>
       </div>
 
       {filteredAndSorted.length > 0 && (
@@ -172,8 +215,8 @@ export function AdminMessagesPage() {
         </div>
       )}
 
-      {/* Mobile: card layout to avoid horizontal scrolling */}
-      <div className="mt-6 space-y-3 sm:hidden">
+      {/* One message per row, responsive cards */}
+      <div className="mt-6 space-y-3">
         {paginatedMessages.map((m) => (
           <div key={m.id} className="rounded-2xl border border-slate-300 bg-white p-4 shadow-sm">
             <div className="flex items-start justify-between gap-3">
@@ -183,10 +226,21 @@ export function AdminMessagesPage() {
                 <p className="mt-1 text-[0.7rem] font-semibold uppercase tracking-wide text-slate-600">Email</p>
                 <p className="text-xs text-slate-600">{m.email}</p>
               </div>
-              <span className="text-[0.7rem] text-slate-500">
-                <span className="font-semibold text-slate-600">Date: </span>
-                {m.createdAt ? new Date(m.createdAt).toLocaleString() : "None"}
-              </span>
+              <div className="flex flex-col items-end gap-1 text-[0.7rem] text-slate-500">
+                <span
+                  className={`inline-flex items-center rounded-full px-2 py-0.5 font-semibold uppercase tracking-wide ${
+                    m.isRead
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                  }`}
+                >
+                  {m.isRead ? "Read" : "Unread"}
+                </span>
+                <span>
+                  <span className="font-semibold text-slate-600">Date: </span>
+                  {m.createdAt ? new Date(m.createdAt).toLocaleString() : "None"}
+                </span>
+              </div>
             </div>
             <p className="mt-2 text-[0.7rem] font-semibold uppercase tracking-wide text-slate-600">Subject</p>
             <p className="text-xs font-medium text-slate-700">
@@ -196,7 +250,22 @@ export function AdminMessagesPage() {
             <p className="text-xs text-slate-700 whitespace-pre-line break-words">
               {m.message}
             </p>
-            <div className="mt-3 flex items-center justify-end">
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 sm:flex-nowrap">
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!auth?.token) return;
+                  try {
+                    await updateAdminMessageReadStatus(auth.token, m.id, !m.isRead);
+                    load();
+                  } catch (e) {
+                    setError(getFriendlyErrorMessage(e));
+                  }
+                }}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-400 hover:text-slate-900 hover:shadow-sm"
+              >
+                {m.isRead ? "Mark as unread" : "Mark as read"}
+              </button>
               <button
                 type="button"
                 onClick={() => setDeleteTarget(m)}
@@ -207,62 +276,6 @@ export function AdminMessagesPage() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Tablet / desktop: keep table layout with horizontal scroll if needed */}
-      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-300 bg-white shadow-sm hidden sm:block">
-        <table className="w-full border-collapse text-base">
-          <thead className="bg-slate-100">
-            <tr className="text-slate-600">
-              <th className="px-5 py-4 text-left font-semibold">
-                <button type="button" onClick={() => toggleSort("name")} className="hover:text-slate-800">
-                  Name {sortKey === "name" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
-                </button>
-              </th>
-              <th className="px-5 py-4 text-left font-semibold">
-                <button type="button" onClick={() => toggleSort("email")} className="hover:text-slate-800">
-                  Email {sortKey === "email" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
-                </button>
-              </th>
-              <th className="px-5 py-4 text-left font-semibold">
-                <button type="button" onClick={() => toggleSort("subject")} className="hover:text-slate-800">
-                  Subject {sortKey === "subject" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
-                </button>
-              </th>
-              <th className="px-5 py-4 text-left font-semibold">Message</th>
-              <th className="px-5 py-4 text-left font-semibold">
-                <button type="button" onClick={() => toggleSort("createdAt")} className="hover:text-slate-800">
-                  Date {sortKey === "createdAt" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
-                </button>
-              </th>
-              <th className="px-5 py-4 text-right font-semibold">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedMessages.map((m) => (
-              <tr key={m.id} className="border-t border-slate-200">
-                <td className="px-5 py-3 font-medium text-slate-800">{m.name}</td>
-                <td className="px-5 py-3 text-slate-600">{m.email}</td>
-                <td className="px-5 py-3 text-slate-600">{m.subject ?? "None"}</td>
-                <td className="max-w-xs truncate px-5 py-3 text-slate-600" title={m.message}>
-                  {m.message}
-                </td>
-                <td className="px-5 py-3 text-slate-600">
-                  {m.createdAt ? new Date(m.createdAt).toLocaleString() : "None"}
-                </td>
-                <td className="px-5 py-3 text-right">
-                  <button
-                    type="button"
-                    onClick={() => setDeleteTarget(m)}
-                    className="rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-sm font-medium text-rose-700 hover:bg-rose-50"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
 
       {filteredAndSorted.length > 0 && (

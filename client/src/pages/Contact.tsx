@@ -76,42 +76,8 @@ export function Contact() {
       <div className="relative mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-slate-200/80 bg-white px-6 py-8 shadow-lg shadow-slate-200/50 sm:px-8 sm:py-10 ring-1 ring-slate-900/5">
           <div className="grid gap-10 sm:grid-cols-2">
-            {/* Contact info */}
-            <section>
-              <h2 className="text-lg font-semibold text-slate-900">
-                Get in touch
-              </h2>
-              <ul className="mt-4 space-y-3 text-slate-600">
-                <li>
-                  <span className="font-medium text-slate-700">Email:</span>{" "}
-                  <a
-                    href="mailto:support@vaporshop.example"
-                    className="text-cyan-600 hover:underline"
-                  >
-                    support@vaporshop.example
-                  </a>
-                </li>
-                <li>
-                  <span className="font-medium text-slate-700">Phone:</span>{" "}
-                  <a
-                    href="tel:+15551234567"
-                    className="text-cyan-600 hover:underline"
-                  >
-                    (555) 123-4567
-                  </a>
-                </li>
-                <li>
-                  <span className="font-medium text-slate-700">Address:</span>
-                  <br />
-                  123 Vapor Street, Suite 100
-                  <br />
-                  Your City, ST 12345
-                </li>
-              </ul>
-            </section>
-
             {/* Contact form */}
-            <section>
+            <section className="sm:col-span-2 sm:max-w-lg">
               <h2 className="text-lg font-semibold text-slate-900">
                 Send a message
               </h2>

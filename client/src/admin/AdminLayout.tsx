@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: "brands", label: "Brands" },
   { to: "newsletter-subscriptions", label: "Newsletter Subscriptions" },
   { to: "messages", label: "Messages" },
+  { to: "account", label: "Account" },
 ] as const;
 
 function CloseIcon({ className }: { className?: string }) {
@@ -73,7 +74,7 @@ export function AdminLayout() {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 transform border-slate-300 bg-slate-100 shadow-lg transition-transform duration-200 lg:static lg:z-auto lg:shrink-0 lg:border-r lg:bg-slate-100 lg:shadow-lg lg:transform-none lg:transition-[width] ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 transform border-slate-300 bg-slate-100 shadow-lg transition-transform duration-200 lg:shrink-0 lg:border-r lg:bg-slate-100 lg:shadow-lg lg:transform-none lg:transition-[width] ${
           sidebarOpen ? "translate-x-0 lg:w-64" : "-translate-x-full lg:w-0 lg:overflow-hidden"
         }`}
       >
@@ -123,9 +124,9 @@ export function AdminLayout() {
         id="admin-main"
         className={`flex-1 min-h-0 px-6 sm:px-8 py-8 bg-gradient-to-br from-slate-300 via-slate-200 to-slate-300 text-base flex flex-col ${
           sidebarOpen ? "overflow-hidden" : "overflow-auto"
-        } lg:overflow-auto`}
+        } lg:overflow-auto ${sidebarOpen ? "lg:pl-64" : "lg:pl-0"}`}
       >
-        <div className="rounded-2xl border border-slate-300 bg-white px-6 py-6 shadow-lg sm:px-8 sm:py-8">
+        <div className="rounded-2xl border border-slate-300 bg-white px-6 py-6 shadow-lg sm:px-8 sm:py-8 lg:ml-6 xl:ml-8">
           <Outlet />
         </div>
         <footer className="mt-auto shrink-0 pt-6 text-center text-sm text-slate-600">

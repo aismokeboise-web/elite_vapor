@@ -74,6 +74,30 @@ export const API_ROUTES: ApiRouteMeta[] = [
     visibility: "public",
   },
   {
+    method: "POST",
+    path: "/api/admin/forgot-password",
+    description: "Request a short-lived admin password reset link by email or username",
+    visibility: "public",
+  },
+  {
+    method: "POST",
+    path: "/api/admin/reset-password/verify",
+    description: "Verify an admin password reset token",
+    visibility: "public",
+  },
+  {
+    method: "POST",
+    path: "/api/admin/reset-password",
+    description: "Reset admin password using a valid reset token",
+    visibility: "public",
+  },
+  {
+    method: "PATCH",
+    path: "/api/admin/account",
+    description: "Update admin username and/or password (requires current password and token)",
+    visibility: "protected",
+  },
+  {
     method: "GET",
     path: "/api/admin/messages",
     description: "List contact messages",

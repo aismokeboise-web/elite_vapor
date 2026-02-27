@@ -20,9 +20,12 @@ export function adminGuard(req: Request, res: Response, next: NextFunction) {
     return next();
   }
 
-  // Public: POST /api/admin/login (when mounted at /api/admin, path is "/login")
-  if (method === "POST" && (normalizedPath === "/login" || normalizedPath.endsWith("/login"))) {
-    return next();
+  // Public: POST /api/admin/login, /forgot-password, /reset-password, /reset-password/verify
+  if (method === "POST") {
+    const publicPaths = ["/login", "/forgot-password", "/reset-password", "/reset-password/verify"];
+    if (publicPaths.includes(normalizedPath) || publicPaths.some((p) => normalizedPath.endsWith(p))) {
+      return next();
+    }
   }
 
   const authHeader = req.headers.authorization || "";

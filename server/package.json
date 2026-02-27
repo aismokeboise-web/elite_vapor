@@ -18,7 +18,8 @@
     "bcryptjs": "^3.0.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "nodemailer": "^8.0.1"
   },
   "devDependencies": {
     "@prisma/adapter-pg": "^7.3.0",

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ApiError, loginAdmin, getFriendlyErrorMessage } from "../api/client";
 import { getAdminAuth, setAdminAuth } from "./auth";
 
@@ -93,6 +93,14 @@ export function AdminLoginPage() {
               autoComplete="current-password"
               className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
+            <div className="mt-2 text-right">
+              <Link
+                to="/admin/forgot-password"
+                className="text-xs font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Forgot password?
+              </Link>
+            </div>
           </div>
           <button
             type="submit"

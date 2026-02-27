@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import prisma from "../prisma";
+import { sendContactConfirmationEmail } from "../email/mailer";
 
 const router = Router();
 
@@ -37,6 +38,12 @@ router.post("/contact", async (req: Request, res: Response) => {
         subject: trimmedSubject || null,
         message: trimmedMessage,
       },
+    });
+
+    // Fire-and-forget confirmation email to the user; log failures but don't block the request.
+    sendContactConfirmationEmail(trimmedEmail, trimmedName).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error("[contact] Failed to send confirmation email", err);
     });
 
     return res.json({ success: true, id: saved.id });

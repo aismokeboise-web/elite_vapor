@@ -142,6 +142,7 @@ export interface ApiMessage {
   subject: string | null;
   message: string;
   createdAt: string;
+  isRead: boolean;
 }
 
 export interface ApiNewsletterSubscription {
@@ -164,6 +165,19 @@ export async function fetchAdminApis(token: string) {
 
 export async function deleteAdminMessage(token: string, id: string | number) {
   return requestWithAuthDelete(`/admin/messages/${id}`, token);
+}
+
+export async function updateAdminMessageReadStatus(
+  token: string,
+  id: string | number,
+  isRead: boolean
+) {
+  return requestWithAuthJson<{ success: boolean; id: number; isRead: boolean }>(
+    `/admin/messages/${id}/read-status`,
+    token,
+    "PATCH",
+    { isRead }
+  );
 }
 
 export async function deleteAdminNewsletterSubscription(token: string, id: string | number) {
@@ -279,6 +293,72 @@ export async function loginAdmin(payload: AdminLoginPayload) {
       body: JSON.stringify(payload),
     }
   );
+}
+
+export interface ForgotPasswordRequest {
+  identifier: string;
+}
+
+export interface ResetPasswordVerifyRequest {
+  token: string;
+}
+
+export interface ResetPasswordVerifyResponse {
+  success: boolean;
+  valid: boolean;
+  username?: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+export interface UpdateAdminAccountRequest {
+  currentPassword: string;
+  newPassword?: string;
+  newUsername?: string;
+}
+
+export async function requestAdminPasswordReset(body: ForgotPasswordRequest) {
+  return requestJson<{ success: boolean }>("/admin/forgot-password", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function verifyAdminResetToken(
+  body: ResetPasswordVerifyRequest
+): Promise<ResetPasswordVerifyResponse> {
+  return requestJson<ResetPasswordVerifyResponse>("/admin/reset-password/verify", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function resetAdminPassword(body: ResetPasswordRequest) {
+  return requestJson<{ success: boolean }>("/admin/reset-password", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateAdminAccount(token: string, body: UpdateAdminAccountRequest) {
+  return requestWithAuthJson<{ success: boolean; token?: string; expiresAt?: number }>(
+    "/admin/account",
+    token,
+    "PATCH",
+    body
+  );
+}
+
+export interface AdminAccountProfile {
+  username: string;
+  email: string;
+}
+
+export async function fetchAdminAccount(token: string): Promise<AdminAccountProfile> {
+  return requestWithAuth<AdminAccountProfile>("/admin/account", token);
 }
 
 export interface ApiBrand {

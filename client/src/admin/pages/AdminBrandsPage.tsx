@@ -150,7 +150,7 @@ export function AdminBrandsPage() {
         </button>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-4">
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <input
           type="text"
           value={filter}
@@ -158,15 +158,18 @@ export function AdminBrandsPage() {
           placeholder="Search brands…"
           className="w-full max-w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:max-w-md lg:max-w-lg"
         />
-        <div className="flex items-center gap-2">
-          <label htmlFor="admin-brands-category-filter" className="text-sm font-medium text-slate-700">
+        <div className="flex items-center gap-2 max-w-full">
+          <label
+            htmlFor="admin-brands-category-filter"
+            className="text-sm font-medium text-slate-700"
+          >
             Category:
           </label>
           <select
             id="admin-brands-category-filter"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="max-w-[9rem] rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:max-w-[10rem] sm:text-sm md:max-w-xs md:px-3 md:py-1.5 lg:px-3 lg:py-2 lg:text-base"
           >
             <option value="">All categories</option>
             {(categories ?? []).map((c) => (
@@ -512,8 +515,11 @@ function CreateBrandModal({
           <label className="block text-sm font-medium text-slate-800">Category</label>
           <select
             value={categoryId}
-            onChange={(e) => { setCategoryId(e.target.value); setSubmitError(null); }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900"
+            onChange={(e) => {
+              setCategoryId(e.target.value);
+              setSubmitError(null);
+            }}
+            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-sm text-slate-900 md:px-3 md:py-1.5 md:text-sm lg:px-3 lg:py-2 lg:text-base"
           >
             <option value="">— None —</option>
             {categories.map((c) => (
@@ -523,7 +529,7 @@ function CreateBrandModal({
             ))}
           </select>
         </div>
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex flex-wrap justify-start gap-2 pt-2">
           <button type="button" onClick={onClose} className="rounded-lg border border-slate-300 px-4 py-2 text-base font-medium text-slate-700 hover:bg-slate-50">
             Cancel
           </button>
@@ -619,7 +625,7 @@ function EditBrandModal({
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-base"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm md:px-3 md:py-1.5 md:text-sm lg:px-3 lg:py-2 lg:text-base"
           >
             <option value="">— None —</option>
             {categories.map((c) => (

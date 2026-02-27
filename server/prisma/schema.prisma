@@ -72,6 +72,7 @@ model Message {
   email     String
   subject   String?
   message   String
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 

@@ -58,6 +58,49 @@ export function About() {
             </p>
           </section>
 
+          <section className="mt-10">
+            <h2 className="text-xl font-semibold text-slate-900">
+              Get in touch
+            </h2>
+            <p className="mt-2 text-slate-600">
+              Have questions about products, availability, or anything else? Reach out and our team will be happy to help.
+            </p>
+            <div className="mt-4 grid gap-4 text-sm text-slate-700 sm:grid-cols-3">
+              <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Email
+                </h3>
+                <a
+                  href="mailto:info@empirevaporcasper.com"
+                  className="mt-1 block text-sm font-semibold text-cyan-700 hover:text-cyan-800 hover:underline"
+                >
+                  info@empirevaporcasper.com
+                </a>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Phone
+                </h3>
+                <a
+                  href="tel:+15551234567"
+                  className="mt-1 block text-sm font-semibold text-cyan-700 hover:text-cyan-800 hover:underline"
+                >
+                  (555) 123-4567
+                </a>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm sm:col-span-1 sm:text-sm">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Visit us
+                </h3>
+                <p className="mt-1 text-sm text-slate-700">
+                  123 Vapor Street, Suite 100
+                  <br />
+                  Your City, ST 12345
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* Inside store photos */}
           <section className="mt-10">
             <h2 className="text-xl font-semibold text-slate-900">
