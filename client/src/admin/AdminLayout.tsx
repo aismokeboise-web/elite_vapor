@@ -52,7 +52,7 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-slate-200 text-slate-800 font-admin antialiased lg:flex">
+    <div className="min-h-screen overflow-x-hidden bg-slate-200 text-slate-800 font-admin antialiased lg:flex">
       {!sidebarOpen && (
         <button
           type="button"
