@@ -3,9 +3,33 @@ import { Link } from "react-router-dom";
 
 
 const slides = [
-  { image: "/banner1.jpg", fallback: "/banner1.jpg", title: "Sales for the Week", subtitle: "Don't miss this week's best sales on devices and more. Great deals on vape kits, mods, and accessories for every vaper." },
-  { image: "/banner2.jpg", fallback: "/banner1.jpg", title: "Flavor That Hits", subtitle: "Discover hundreds of e-liquids and disposables to find your favorite. From fruity to minty, we have it all." },
-  { image: "/banner3.jpg", fallback: "/banner1.jpg", title: "Premium Selection", subtitle: "Save on devices, juice, and accessories today. Limited time offers on top brands and best sellers." },
+  {
+    image: "/banner1.jpg",
+    mobileImage: "/banner1_mb_tb.jpg",
+    fallback: "/banner1.jpg",
+    title: "Sales for the Week",
+    shortTitle: "Weekly sales",
+    subtitle: "Don't miss this week's best sales on devices and more. Great deals on vape kits, mods, and accessories for every vaper.",
+    shortSubtitle: "Save big on this week’s deals.",
+  },
+  {
+    image: "/banner2.jpg",
+    mobileImage: "/banner2_mb_tb.jpg",
+    fallback: "/banner1.jpg",
+    title: "Flavor That Hits",
+    shortTitle: "Big flavor hits",
+    subtitle: "Discover hundreds of e-liquids and disposables to find your favorite. From fruity to minty, we have it all.",
+    shortSubtitle: "Hundreds of flavors to try.",
+  },
+  {
+    image: "/banner3.jpg",
+    mobileImage: "/banner3_mb_tb.jpg",
+    fallback: "/banner1.jpg",
+    title: "Premium Selection",
+    shortTitle: "Premium picks",
+    subtitle: "Save on devices, juice, and accessories today. Limited time offers on top brands and best sellers.",
+    shortSubtitle: "Top brands, hand-picked for you.",
+  },
 ];
 
 export function HeroCarousel() {
@@ -59,25 +83,45 @@ export function HeroCarousel() {
             }`}
             aria-hidden={index !== currentIndex}
           >
-            <img
-              src={getImageSrc(slide)}
-              alt="banner image"
-              className="absolute inset-0 h-full w-full object-cover"
-              onError={() => handleImageError(slide.image)}
-            />
+            <picture className="absolute inset-0 h-full w-full">
+              <source media="(min-width: 1024px)" srcSet={getImageSrc(slide)} />
+              <img
+                src={slide.mobileImage ?? getImageSrc(slide)}
+                alt="banner image"
+                className="h-full w-full object-cover"
+                onError={() => handleImageError(slide.image)}
+              />
+            </picture>
             <div className="absolute inset-0 bg-slate-900/5" aria-hidden />
-            <div className="absolute right-0 top-0 bottom-0 left-1/2 flex flex-col items-center justify-center gap-5 text-center px-6 text-black">
+            <div className="absolute right-0 top-0 bottom-0 left-1/2 flex flex-col items-center justify-center gap-3 sm:gap-4 lg:gap-5 text-center px-4 sm:px-5 lg:px-6 text-black">
               <h2
-                className={`max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl ${
+                className={`max-w-2xl text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold tracking-tight ${
                   index === currentIndex
                     ? "animate-fade-in-up opacity-0 [animation-fill-mode:forwards]"
                     : ""
                 }`}
               >
-                {slide.title}
+                <span className="block lg:hidden">
+                  {slide.shortTitle ?? slide.title}
+                </span>
+                <span className="hidden lg:inline">
+                  {slide.title}
+                </span>
               </h2>
+              {/* Very short description on mobile/tablet */}
+              {slide.shortSubtitle && (
+                <p
+                  className={`block lg:hidden max-w-xs text-xs sm:text-sm text-slate-900 ${
+                    index === currentIndex
+                      ? "animate-fade-in-up opacity-0 [animation-delay:120ms] [animation-fill-mode:forwards]"
+                      : ""
+                  }`}
+                >
+                  {slide.shortSubtitle}
+                </p>
+              )}
               <p
-                className={`max-w-lg text-base text-slate-900 sm:text-lg md:text-xl ${
+                className={`hidden lg:block max-w-lg text-sm sm:text-base md:text-lg lg:text-xl text-slate-900 ${
                   index === currentIndex
                     ? "animate-fade-in-up opacity-0 [animation-delay:150ms] [animation-fill-mode:forwards]"
                     : ""
@@ -87,14 +131,14 @@ export function HeroCarousel() {
               </p>
               <Link
                 to="/products"
-                className={`inline-flex items-center gap-2 rounded-full border-2 border-slate-900 bg-slate-900 px-8 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-slate-800 hover:border-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 focus:ring-offset-white/50 ${
+                className={`inline-flex items-center gap-2 rounded-full border-2 border-slate-900 bg-slate-900 px-4 py-2.5 text-xs sm:px-5 sm:py-2.5 sm:text-sm md:px-6 md:py-3 md:text-sm lg:px-8 lg:py-3.5 lg:text-base font-semibold text-white shadow-lg transition-all hover:bg-slate-800 hover:border-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 focus:ring-offset-white/50 ${
                   index === currentIndex
                     ? "animate-fade-in-up opacity-0 [animation-delay:300ms] [animation-fill-mode:forwards]"
                     : ""
                 }`}
               >
                 View products
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="hidden h-5 w-5 lg:inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
@@ -106,11 +150,21 @@ export function HeroCarousel() {
         <button
           type="button"
           onClick={goPrev}
-          className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-slate-900/70 p-2.5 text-white transition-all hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent sm:left-4 sm:p-3"
+          className="absolute left-2 top-1/2 z-20 -translate-y-1/2 bg-transparent p-1 text-white transition-all focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent sm:left-3 lg:left-4 lg:rounded-full lg:bg-slate-900/70 lg:p-2.5 lg:hover:bg-slate-800"
           aria-label="Previous slide"
         >
           <svg
-            className="h-5 w-5 sm:h-6 sm:w-6"
+            className="h-4 w-4 text-white drop-shadow-[0_0_4px_rgba(15,23,42,0.9)] lg:hidden"
+            fill="none"
+            viewBox="0 0 16 16"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10 3L5 8l5 5" />
+          </svg>
+          {/* Original arrow on laptop and up */}
+          <svg
+            className="hidden h-5 w-5 sm:h-6 sm:w-6 lg:inline-block"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -124,11 +178,21 @@ export function HeroCarousel() {
         <button
           type="button"
           onClick={goNext}
-          className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-slate-900/70 p-2.5 text-white transition-all hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent sm:right-4 sm:p-3"
+          className="absolute right-2 top-1/2 z-20 -translate-y-1/2 bg-transparent p-1 text-white transition-all focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent sm:right-3 lg:right-4 lg:rounded-full lg:bg-slate-900/70 lg:p-2.5 lg:hover:bg-slate-800"
           aria-label="Next slide"
         >
           <svg
-            className="h-5 w-5 sm:h-6 sm:w-6"
+            className="h-4 w-4 text-sky-900 drop-shadow-[0_0_4px_rgba(15,23,42,0.9)] lg:hidden"
+            fill="none"
+            viewBox="0 0 16 16"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 3l5 5-5 5" />
+          </svg>
+          {/* Original arrow on laptop and up */}
+          <svg
+            className="hidden h-5 w-5 sm:h-6 sm:w-6 lg:inline-block"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

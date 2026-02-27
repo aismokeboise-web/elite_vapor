@@ -175,8 +175,8 @@ export function AdminModelsPage() {
           type="text"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="Search by name, description, price, or flags…"
-          className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:min-w-[22rem] md:min-w-[28rem] lg:min-w-[32rem]"
+          placeholder="Search models…"
+          className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:min-w-[18rem] md:min-w-[24rem] lg:min-w-[32rem]"
         />
         <div className="flex flex-wrap items-center gap-3 text-sm text-slate-700">
           <span className="font-medium text-slate-600">Filter by flag:</span>
@@ -258,7 +258,7 @@ export function AdminModelsPage() {
             >
               Previous
             </button>
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
@@ -394,7 +394,7 @@ export function AdminModelsPage() {
             >
               Previous
             </button>
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}

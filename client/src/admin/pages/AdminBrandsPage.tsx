@@ -158,8 +158,8 @@ export function AdminBrandsPage() {
           type="text"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="Search by name or category…"
-          className="min-w-[20rem] rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          placeholder="Search brands…"
+          className="w-full max-w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:max-w-md lg:max-w-lg"
         />
         <div className="flex items-center gap-2">
           <label htmlFor="admin-brands-category-filter" className="text-sm font-medium text-slate-700">
@@ -199,7 +199,7 @@ export function AdminBrandsPage() {
             >
               Previous
             </button>
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
@@ -306,7 +306,7 @@ export function AdminBrandsPage() {
             >
               Previous
             </button>
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center justify-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}

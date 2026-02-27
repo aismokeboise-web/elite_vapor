@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate, NavLink, Navigate } from "react-router-dom";
 import { clearAdminAuth, getAdminAuth } from "./auth";
 
@@ -33,7 +33,14 @@ function MenuHorizontalIcon({ className }: { className?: string }) {
 export function AdminLayout() {
   const navigate = useNavigate();
   const auth = getAdminAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Open sidebar by default on desktop/laptop, keep it closed on tablet/mobile
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth >= 1024) {
+      setSidebarOpen(true);
+    }
+  }, []);
 
   if (!auth) {
     return <Navigate to="/admin" replace />;
@@ -45,21 +52,29 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-200 text-slate-800 font-admin antialiased">
+    <div className="h-screen overflow-hidden bg-slate-200 text-slate-800 font-admin antialiased lg:flex">
       {!sidebarOpen && (
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
-          className="fixed left-0 top-5 z-50 flex h-12 w-12 items-center justify-center rounded-r-xl border border-slate-300 border-l-0 bg-slate-100 text-slate-600 shadow-xl hover:bg-indigo-100 hover:text-indigo-700 hover:border-indigo-200"
+          className="fixed left-0 top-5 z-30 flex h-12 w-12 items-center justify-center rounded-r-xl border border-slate-300 border-l-0 bg-slate-100 text-slate-600 shadow-xl hover:bg-indigo-100 hover:text-indigo-700 hover:border-indigo-200"
           aria-label="Show navigation"
         >
           <MenuHorizontalIcon />
         </button>
       )}
 
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-slate-900/40 lg:hidden"
+          aria-hidden
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       <aside
-        className={`shrink-0 border-r border-slate-300 bg-slate-100 shadow-lg transition-[width] ${
-          sidebarOpen ? "w-64" : "w-0 overflow-hidden"
+        className={`fixed inset-y-0 left-0 z-30 w-64 transform border-slate-300 bg-slate-100 shadow-lg transition-transform duration-200 lg:static lg:z-auto lg:shrink-0 lg:border-r lg:bg-slate-100 lg:shadow-lg lg:transform-none lg:transition-[width] ${
+          sidebarOpen ? "translate-x-0 lg:w-64" : "-translate-x-full lg:w-0 lg:overflow-hidden"
         }`}
       >
         <div className="sticky top-0 flex w-64 flex-col min-h-screen">
