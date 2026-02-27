@@ -23,8 +23,8 @@ export function AdminMessagesPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
-  const [sortKey, setSortKey] = useState<SortKey>("createdAt");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [sortKey] = useState<SortKey>("createdAt");
+  const [sortOrder] = useState<SortOrder>("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<ApiMessage | null>(null);
   const [deleting, setDeleting] = useState(false);
