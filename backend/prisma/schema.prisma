@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  iconPath  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  brands Brand[]
+}
+
+model Brand {
+  id         String    @id @default(cuid())
+  name       String
+  categoryId String
+  category   Category  @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  name             String
+  size             String?
+  nicotineStrength String?
+  brandId          String
+  brand            Brand    @relation(fields: [brandId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+
+  models Model[]
+}
+
+model Model {
+  id           String   @id @default(cuid())
+  name         String
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id])
+  price        Decimal  @db.Decimal(10, 2)
+  description  String?
+  flavors      String[] @default([])
+  is_clearance Boolean  @default(false)
+  is_deal      Boolean  @default(false)
+  deal_text    String?  @default("On Sale")
+  is_best_seller Boolean @default(false)
+  is_new         Boolean @default(false)
+  is_featured    Boolean @default(false)
+  imageUrls    String[] @default([])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  repliedAt DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model NewsletterSubscription {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  active           Boolean  @default(true)
+  unsubscribeToken String   @unique @default(cuid())
+  createdAt        DateTime @default(now())
+}
+
+model Admin {
+  id               String   @id @default(cuid())
+  username         String   @unique
+  email            String   @unique
+  password         String
+  resetToken       String?  @unique
+  resetTokenExpires DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+
+  subadmins Subadmin[]
+}
+
+model Subadmin {
+  id               String      @id @default(cuid())
+  username         String      @unique
+  email            String      @unique
+  password         String
+  isActive         Boolean     @default(true)
+  hasLoggedInOnce  Boolean     @default(false)
+  resetToken       String?     @unique
+  resetTokenExpires DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @default(now()) @updatedAt
+
+  adminId   String
+  admin     Admin       @relation(fields: [adminId], references: [id])
+  privileges Privilege[]
+}
+
+model Privilege {
+  id         String   @id @default(cuid())
+  subadminId String
+  subadmin   Subadmin @relation(fields: [subadminId], references: [id])
+
+  /// Resource name, e.g. \"model\", \"product\", \"message\"
+  resource   String
+  canCreate  Boolean  @default(false)
+  canUpdate  Boolean  @default(false)
+  canDelete  Boolean  @default(false)
+  canReply   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@unique([subadminId, resource])
+}

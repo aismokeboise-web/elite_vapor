@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* Elite Vapor – Indigo primary (readable), Violet secondary */
+.admin-bg {
+  --primary: 99 102 241;   /* indigo-500 */
+  --primary-dark: 79 70 229; /* indigo-600 */
+  --secondary: 139 92 246;   /* violet-500 */
+  --secondary-dark: 124 58 237; /* violet-600 */
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -15%, rgba(99, 102, 241, 0.08), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, rgba(139, 92, 246, 0.05), transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+}
+
+/* Card style used across manage pages */
+.admin-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 1rem;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(99, 102, 241, 0.04);
+}
+
+.admin-card-hover:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 8px 24px rgba(99, 102, 241, 0.08);
+}
+
+/* Public site: subtle fade-in up animation (fallback when not using Motion) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Public site: code-based banner animation (gradient shift – works like a subtle gif) */
+@keyframes bannerGradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+@keyframes bannerShine {
+  0% {
+    opacity: 0.15;
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+.public-banner-animated {
+  background: linear-gradient(
+    135deg,
+    #0f172a 0%,
+    #1e293b 25%,
+    #334155 50%,
+    #1e3a5f 75%,
+    #0f172a 100%
+  );
+  background-size: 400% 400%;
+  animation: bannerGradientShift 12s ease infinite;
+}
+.public-banner-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    transparent 60%
+  );
+  animation: bannerShine 6s ease-in-out infinite;
+  pointer-events: none;
+}

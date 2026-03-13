@@ -23,7 +23,7 @@ jobs:
           script: |
             set -e
 
-            cd /var/www/empire  # or /var/www/empire – use the path you actually created
+            cd /var/www/elite  # or /var/www/elite – use the path you actually created
 
             # Pull latest code
             git fetch --all
@@ -31,7 +31,7 @@ jobs:
             git pull origin main
 
             # Build server
-            cd server
+            cd backend
             npm ci || npm install
             npx prisma generate
             npm run build
@@ -40,13 +40,13 @@ jobs:
             # Run Prisma migrations against production DB
             npx prisma migrate deploy
 
-            # Build client
-            cd ../client
+            # Build frontend
+            cd ../frontend
             npm ci || npm install
             npm run build
 
             # Restart Node server via PM2
-            cd ../server
-            pm2 reload empire-server || pm2 start dist/index.js --name empire-server --update-env
+            cd ../backend
+            pm2 reload elite-backend || pm2 start dist/index.js --name elite-backend --update-env
 
             pm2 save
