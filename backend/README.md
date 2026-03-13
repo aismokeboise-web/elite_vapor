@@ -3,12 +3,12 @@
 This `backend` project is a standalone Node.js + TypeScript + Express + Prisma API.
 It models **products** and their **models/variants**, plus **admins**, **subadmins**, and **privileges** that control which subadmins can perform write operations.
 
-The existing `client` and `server` folders are **not** modified by this backend.
+The existing `frontend` and `backend` folders are **not** modified by this backend.
 
 ## Setup
 
 - Copy `.env.example` to `.env` and set:
-  - `DATABASE_URL` – PostgreSQL connection URL for this backend (separate from the existing `server` DB).
+  - `DATABASE_URL` – PostgreSQL connection URL for this backend (separate from the existing `backend` DB).
   - `JWT_SECRET` – secret string used to sign JWT tokens.
 - Install dependencies:
 

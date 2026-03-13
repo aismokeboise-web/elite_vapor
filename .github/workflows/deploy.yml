@@ -41,13 +41,17 @@ jobs:
             # Run Prisma migrations against production DB
             npx prisma migrate deploy
 
-            # Build frontend
+            # Build frontend (Next.js)
             cd ../frontend
             npm ci || npm install
             npm run build
 
-            # Restart Node server via PM2
+            # Restart backend via PM2
             cd ../backend
             pm2 reload elite-backend || pm2 start dist/index.js --name elite-backend --update-env
+
+            # Restart frontend (Next.js) via PM2
+            cd ../frontend
+            pm2 reload elite-frontend || pm2 start npm --name elite-frontend -- start
 
             pm2 save
