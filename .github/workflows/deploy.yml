@@ -34,6 +34,7 @@ jobs:
             cd backend
             npm ci || npm install
             npx prisma generate
+            npm run lint
             npm run build
             
 
