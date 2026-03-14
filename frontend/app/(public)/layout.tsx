@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { AgeGate } from "@/components/AgeGate";
 import { PublicNavBar } from "@/components/PublicNavBar";
+import { ChatWidget } from "@/components/ChatWidget";
 import Link from "next/link";
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
@@ -10,6 +11,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <div className="flex min-h-screen flex-col bg-slate-100 text-slate-900">
         <PublicNavBar />
         <main className="flex-1">{children}</main>
+        <ChatWidget />
       <footer className="border-t border-slate-800 bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 text-slate-100">
         <div className="mx-auto max-w-6xl px-4 pt-6 pb-3 sm:px-6 sm:pt-8 sm:pb-4 lg:px-8">
           <div className="grid gap-8 md:grid-cols-4">
