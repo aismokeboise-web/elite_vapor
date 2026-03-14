@@ -25,10 +25,10 @@ jobs:
 
             cd /var/www/elite  # or /var/www/elite – use the path you actually created
 
-            # Pull latest code
+            # Pull latest code (reset any local changes so pull never fails)
             git fetch --all
             git checkout main
-            git pull origin main
+            git reset --hard origin/main
 
             # Build server
             cd backend
