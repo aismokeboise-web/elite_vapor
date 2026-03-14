@@ -30,6 +30,11 @@ app.use("/api/models", modelsRouter);
 app.use("/api/messages", messagesRouter);
 app.use("/api/newsletter", newsletterRouter);
 
+// Catch-all: no valid route matched
+app.use("*", (req, res) => {
+  res.status(404).json({ error: "Not found", path: req.originalUrl });
+});
+
 const PORT = process.env.PORT ?? 5000;
 
 app.listen(PORT, () => {
