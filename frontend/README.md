@@ -26,10 +26,11 @@ Create a `.env.local` file in `frontend/` if you want to override defaults:
 
 ```bash
 NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
+GOOGLE_GENERATIVE_AI_API_KEY=your_key_here
 ```
 
-If `NEXT_PUBLIC_BACKEND_URL` is not set, the frontend defaults to
-`http://localhost:5000`.
+- If `NEXT_PUBLIC_BACKEND_URL` is not set, the frontend defaults to `http://localhost:5000`.
+- `GOOGLE_GENERATIVE_AI_API_KEY` is required for the `/chat` page (store assistant). Get a key from [Google AI Studio](https://aistudio.google.com/apikey).
 
 ## Auth integration
 
