@@ -89,7 +89,9 @@ function MinimizeIcon({ className }: { className?: string }) {
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({
+      api: process.env.NEXT_PUBLIC_BACKEND_URL || "/chat-api",
+    }),
   });
   const [input, setInput] = useState("");
 
