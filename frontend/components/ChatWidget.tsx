@@ -90,7 +90,7 @@ export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
-      api: process.env.NEXT_PUBLIC_BACKEND_URL || "/chat-api",
+      api: process.env.NEXT_PUBLIC_CHAT_URL ?? "/chat-api",
     }),
   });
   const [input, setInput] = useState("");
@@ -215,7 +215,7 @@ export function ChatWidget() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mx-3 mb-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 sm:mx-4 sm:px-4 sm:py-2.5 sm:text-base"
               >
-                Something went wrong. Please try again.
+                We couldn't connect to server right now.
               </motion.div>
             )}
 
