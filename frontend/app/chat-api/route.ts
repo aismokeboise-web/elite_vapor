@@ -92,7 +92,7 @@ async function fetchStoreContext(): Promise<string> {
     context += "- About: We are dedicated to offering quality vaping products and accessories. We focus on reliability, variety, and customer satisfaction. We offer a wide selection—from disposables to devices and e-liquids—across categories. We choose products we trust so customers can shop with confidence. Questions? We're here to help; direct users to our Contact page.\n";
     context += "- Contact: Customers can reach us via the contact form at " + SITE_BASE_URL + "/contact (name, email, subject, message), or by email at info@elitevaporboise.com. We aim to respond within one business day.\n";
     context += "- Newsletter: Users can sign up on the site for updates on new arrivals, limited-time deals, and clearance drops from Elite Vapor.\n";
-    context += "- Social: We have a “Follow Us” presence for new arrivals and offers (e.g. Facebook, Instagram); encourage users to follow for updates.\n\n";
+    context += "- Social: We have a \"Follow Us\" presence for new arrivals and offers (e.g. Facebook, Instagram); encourage users to follow for updates.\n\n";
 
     context += "Site navigation (give users these exact links when they ask how to find a page):\n";
     context += `- Contact form: ${SITE_BASE_URL}/contact\n`;

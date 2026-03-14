@@ -89,7 +89,9 @@ function MinimizeIcon({ className }: { className?: string }) {
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({
+      api: process.env.NEXT_PUBLIC_BACKEND_URL || "/chat-api",
+    }),
   });
   const [input, setInput] = useState("");
 
@@ -122,20 +124,20 @@ export function ChatWidget() {
             className="fixed inset-x-2 bottom-4 z-40 flex h-[min(560px,calc(100dvh-2rem))] w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[min(560px,78vh)] sm:w-[min(calc(100vw-3rem),400px)]"
           >
             {/* Header – Elite Vapor logo (navbar logo) + title */}
-            <div className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-slate-50 px-3 py-2.5 sm:px-4 sm:py-3">
+            <div className="flex shrink-0 items-center justify-between border-b border-blue-700/30 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 px-3 py-2.5 shadow-sm sm:px-4 sm:py-3">
               <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-sm ring-1 ring-slate-200 sm:h-10 sm:w-10">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/95 shadow-md ring-1 ring-white/30 sm:h-10 sm:w-10">
                   <img src="/images/logo.svg" alt="" className="h-5 w-5 object-contain sm:h-6 sm:w-6" aria-hidden />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="truncate text-sm font-semibold tracking-tight text-slate-900 sm:text-base">Elite Vapor</h2>
-                  <p className="truncate text-xs text-slate-500 sm:text-sm">Store assistant</p>
+                  <h2 className="truncate text-sm font-semibold tracking-tight text-white sm:text-base">Elite Vapor</h2>
+                  <p className="truncate text-xs text-blue-100 sm:text-sm">Store assistant</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="cursor-pointer shrink-0 rounded-xl p-2 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white sm:p-2.5"
+                className="cursor-pointer shrink-0 rounded-xl p-2 text-blue-100 transition hover:bg-white/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-blue-700 sm:p-2.5"
                 aria-label="Minimize chat"
               >
                 <MinimizeIcon className="h-5 w-5" />
