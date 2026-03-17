@@ -79,46 +79,46 @@ export default function AboutPage() {
                 <li>A clean and welcoming store environment</li>
                 <li>Access to the newest products in the market</li>
               </ul>
-              <p className="mt-2 text-sm text-slate-700 sm:text-base">
+              <p className="mt-2 text-sm text-slate-700 sm:text-base mb-4">
                 We believe that every customer should feel comfortable, informed, and valued when
                 visiting our store.
               </p>
             </div>
 
-            <div className="relative mt-6 aspect-[4/5] max-w-xs justify-self-center overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0 sm:max-w-sm lg:max-w-md">
+            <div className="relative mt-6 aspect-[4/5] w-full max-w-[220px] justify-self-center overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0 sm:max-w-[260px] lg:max-w-[280px]">
               <Image
-                src="/images/interior-image-1.jpeg"
+                src="/images/interior-image-2.jpeg"
                 alt="Interior view of Elite Vapor store"
                 fill
                 className="object-cover object-center"
-                sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
+                sizes="(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 280px"
                 priority
               />
             </div>
           </section>
 
           {/* Store interior images */}
-          <section className="mt-12">
+          <section className="mt-6 sm:mt-8">
             <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Our Store</h2>
             <p className="mt-2 text-sm text-slate-600 sm:text-base">
               Take a look inside Elite Vapor. This photo showcases our interior and product
               displays so you know what to expect when you visit.
             </p>
             <div className="mt-6 grid gap-6 sm:mt-8 sm:grid-cols-2">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm sm:col-span-2">
+              <div className="relative aspect-[4/3] w-full max-w-3xl justify-self-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm sm:col-span-2">
                 <Image
-                  src="/images/interior-image-2.jpeg"
+                  src="/images/interior-image-1.jpeg"
                   alt="Display of products inside Elite Vapor"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 80vw"
+                  sizes="(max-width: 768px) 90vw, 70vw"
                 />
               </div>
             </div>
           </section>
 
           {/* Visit & contact details */}
-          <section className="mt-12 border-t border-slate-200 pt-12">
+          <section className="mt-8 sm:mt-10 border-t border-slate-200 pt-8 sm:pt-10">
             <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Visit Elite Vapor</h2>
             <p className="mt-2 text-slate-700">
               If you’re looking for a reliable vape shop in Boise with quality products and
@@ -145,13 +145,27 @@ export default function AboutPage() {
                 <dt className="text-sm font-semibold uppercase tracking-wide text-slate-500">
                   Phone
                 </dt>
-                <dd className="mt-1 text-slate-800">+1 (208) 957-5963</dd>
+                <dd className="mt-1">
+                  <a
+                    href="tel:+12089575963"
+                    className="text-slate-800 underline decoration-slate-300 underline-offset-4 transition hover:text-indigo-700 hover:decoration-indigo-400"
+                  >
+                    +1 (208) 957-5963
+                  </a>
+                </dd>
               </div>
               <div>
                 <dt className="text-sm font-semibold uppercase tracking-wide text-slate-500">
                   Email
                 </dt>
-                <dd className="mt-1 text-slate-800">info@elitevaporboise.com</dd>
+                <dd className="mt-1">
+                  <a
+                    href="mailto:info@elitevaporboise.com"
+                    className="text-slate-800 underline decoration-slate-300 underline-offset-4 transition hover:text-indigo-700 hover:decoration-indigo-400"
+                  >
+                    info@elitevaporboise.com
+                  </a>
+                </dd>
               </div>
             </dl>
           </section>
