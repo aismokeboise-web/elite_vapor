@@ -24,9 +24,9 @@ export default function AboutPage() {
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-lg sm:p-8 lg:p-10">
           {/* About Elite Vapor copy + hero image */}
           <section className="grid gap-10 lg:grid-cols-[3fr,2fr] lg:items-center">
-            <div className="prose prose-slate max-w-none">
+            <div className="max-w-none">
               <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Elite Vapor</h2>
-              <p className="mt-4 text-base text-slate-700 sm:text-lg">
+              <p className="mt-4 text-sm text-slate-700 sm:text-base">
                 Elite Vapor is a modern vape and smoke shop located in Boise, Idaho, dedicated to
                 providing high-quality vaping products, smoke shop accessories, and outstanding
                 customer service to our local community. Our mission is to create a welcoming
@@ -34,62 +34,64 @@ export default function AboutPage() {
                 in the vaping industry with confidence.
               </p>
 
-              <h3 className="mt-8 text-xl font-semibold text-slate-900">
+              <h3 className="mt-8 text-lg font-semibold text-slate-900 sm:text-xl">
                 Quality Products You Can Trust
               </h3>
-              <p className="mt-2 text-slate-700">
+              <p className="mt-2 text-sm text-slate-700 sm:text-base">
                 At Elite Vapor, we carefully select products from some of the most trusted and
                 recognized brands in the vape industry. Our inventory includes a wide range of
                 disposable vapes, premium e-liquids, pod systems, vape devices, coils, and
                 accessories designed to meet different preferences and experience levels.
               </p>
-              <p className="mt-2 text-slate-700">
+              <p className="mt-2 text-sm text-slate-700 sm:text-base">
                 We regularly carry popular brands such as Geek Bar, Lost Mary, Off Stamp, Raz, and
                 many other industry-leading manufacturers known for quality and reliability.
               </p>
 
-              <h3 className="mt-8 text-xl font-semibold text-slate-900">
+              <h3 className="mt-8 text-lg font-semibold text-slate-900 sm:text-xl">
                 Devices, Flavors, and Accessories
               </h3>
-              <p className="mt-2 text-slate-700">
+              <p className="mt-2 text-sm text-slate-700 sm:text-base">
                 Our store offers a complete selection of vaping products including:
               </p>
-              <ul className="mt-2 list-disc pl-5 text-slate-700">
+              <ul className="mt-2 list-disc pl-5 text-sm text-slate-700 sm:text-base">
                 <li>Disposable vape devices</li>
                 <li>Pod systems and refillable vape kits</li>
                 <li>Nicotine salt and freebase e-liquids</li>
                 <li>Replacement pods and coils</li>
                 <li>Batteries, chargers, and vape accessories</li>
               </ul>
-              <p className="mt-2 text-slate-700">
+              <p className="mt-2 text-sm text-slate-700 sm:text-base">
                 Whether you are looking for a simple disposable device or a more advanced setup, our
                 team is here to help you find the right product.
               </p>
 
-              <h3 className="mt-8 text-xl font-semibold text-slate-900">Customer Experience</h3>
-              <p className="mt-2 text-slate-700">
+              <h3 className="mt-8 text-lg font-semibold text-slate-900 sm:text-xl">
+                Customer Experience
+              </h3>
+              <p className="mt-2 text-sm text-slate-700 sm:text-base">
                 Customer satisfaction is at the heart of everything we do. At Elite Vapor, we focus
                 on:
               </p>
-              <ul className="mt-2 list-disc pl-5 text-slate-700">
+              <ul className="mt-2 list-disc pl-5 text-sm text-slate-700 sm:text-base">
                 <li>Friendly and knowledgeable service</li>
                 <li>Competitive pricing</li>
                 <li>A clean and welcoming store environment</li>
                 <li>Access to the newest products in the market</li>
               </ul>
-              <p className="mt-2 text-slate-700">
+              <p className="mt-2 text-sm text-slate-700 sm:text-base">
                 We believe that every customer should feel comfortable, informed, and valued when
                 visiting our store.
               </p>
             </div>
 
-            <div className="relative mt-6 aspect-[4/5] overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0">
+            <div className="relative mt-6 aspect-[4/5] max-w-xs justify-self-center overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0 sm:max-w-sm lg:max-w-md">
               <Image
                 src="/images/interior-image-1.jpeg"
                 alt="Interior view of Elite Vapor store"
                 fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover object-center"
+                sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
                 priority
               />
             </div>
