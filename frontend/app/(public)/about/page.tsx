@@ -5,7 +5,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col bg-slate-100">
       {/* Hero strip */}
-      <section className="w-full border-b border-slate-200 bg-gradient-to-r from-slate-100 via-slate-50 to-indigo-100 py-8 sm:py-10 lg:py-12">
+      <section className="w-full border-b border-slate-200 bg-gradient-to-r from-slate-100 via-slate-50 to-indigo-100 py-6 sm:py-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 sm:px-6 lg:px-8">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-indigo-800 shadow-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
