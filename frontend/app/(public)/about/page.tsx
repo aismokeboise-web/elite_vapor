@@ -6,7 +6,7 @@ export default function AboutPage() {
     <div className="flex flex-col bg-slate-100">
       {/* Hero strip */}
       <section className="w-full border-b border-slate-200 bg-gradient-to-r from-slate-100 via-slate-50 to-indigo-100 py-8 sm:py-10 lg:py-12">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-1.5 sm:gap-2 px-4 sm:px-6 lg:px-8">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-indigo-800 shadow-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
             Our story
@@ -14,7 +14,7 @@ export default function AboutPage() {
           <h1 className="text-left text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             About Us
           </h1>
-          <p className="max-w-2xl text-left text-sm text-slate-600 sm:text-base">
+          <p className="max-w-2xl text-left text-sm text-slate-600 sm:text-base mb-1">
             Learn more about Elite Vapor, your modern vape and smoke shop in Boise, Idaho.
           </p>
         </div>
@@ -23,7 +23,7 @@ export default function AboutPage() {
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-lg sm:p-8 lg:p-10">
           {/* About Elite Vapor copy + hero image */}
-          <section className="grid gap-10 lg:grid-cols-[3fr,2fr] lg:items-center">
+          <section className="grid gap-8 lg:gap-10 lg:grid-cols-[3fr,2fr] lg:items-center">
             <div className="max-w-none">
               <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Elite Vapor</h2>
               <p className="mt-4 text-sm text-slate-700 sm:text-base">
@@ -85,7 +85,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="relative mt-6 aspect-[4/5] w-full max-w-[220px] justify-self-center overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0 sm:max-w-[260px] lg:max-w-[280px]">
+            <div className="relative mt-4 aspect-[4/5] w-full max-w-[220px] justify-self-start overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0 sm:max-w-[240px] lg:max-w-[260px]">
               <Image
                 src="/images/interior-image-2.jpeg"
                 alt="Interior view of Elite Vapor store"
@@ -104,14 +104,23 @@ export default function AboutPage() {
               Take a look inside Elite Vapor. This photo showcases our interior and product
               displays so you know what to expect when you visit.
             </p>
-            <div className="mt-6 grid gap-6 sm:mt-8 sm:grid-cols-2">
-              <div className="relative aspect-[4/3] w-full max-w-3xl justify-self-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm sm:col-span-2">
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-6">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
                 <Image
                   src="/images/interior-image-1.jpeg"
                   alt="Display of products inside Elite Vapor"
                   fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 90vw, 70vw"
+                  className="object-cover object-center"
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                />
+              </div>
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+                <Image
+                  src="/images/interior-image-2.jpeg"
+                  alt="Another view of products inside Elite Vapor"
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 640px) 100vw, 50vw"
                 />
               </div>
             </div>
