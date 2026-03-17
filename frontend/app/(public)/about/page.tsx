@@ -84,17 +84,6 @@ export default function AboutPage() {
                 visiting our store.
               </p>
             </div>
-
-            <div className="relative mt-4 aspect-[4/5] w-full max-w-[220px] justify-self-start overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0 sm:max-w-[240px] lg:max-w-[260px]">
-              <Image
-                src="/images/interior-image-2.jpeg"
-                alt="Interior view of Elite Vapor store"
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 280px"
-                priority
-              />
-            </div>
           </section>
 
           {/* Store interior images */}
