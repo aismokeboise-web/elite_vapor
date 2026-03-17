@@ -85,7 +85,7 @@ export default function AboutPage() {
 
             <div className="relative mt-6 aspect-[4/5] overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm sm:mt-0">
               <Image
-                src="/interior-image-1.jpeg"
+                src="/images/interior-image-1.jpeg"
                 alt="Interior view of Elite Vapor store"
                 fill
                 className="object-cover"
@@ -105,7 +105,7 @@ export default function AboutPage() {
             <div className="mt-6 grid gap-6 sm:mt-8 sm:grid-cols-2">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm sm:col-span-2">
                 <Image
-                  src="/interior-image-2.jpeg"
+                  src="/images/interior-image-2.jpeg"
                   alt="Display of products inside Elite Vapor"
                   fill
                   className="object-cover"
