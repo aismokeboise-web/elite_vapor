@@ -6,7 +6,7 @@ export default function AboutPage() {
     <div className="flex flex-col bg-slate-100">
       {/* Hero strip */}
       <section className="w-full border-b border-slate-200 bg-gradient-to-r from-slate-100 via-slate-50 to-indigo-100 py-8 sm:py-10 lg:py-12">
-        <div className="mx-auto flex max-w-6xl flex-col gap-1.5 sm:gap-2 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 sm:px-6 lg:px-8">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-indigo-800 shadow-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
             Our story
@@ -14,13 +14,13 @@ export default function AboutPage() {
           <h1 className="text-left text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             About Us
           </h1>
-          <p className="max-w-2xl text-left text-sm text-slate-600 sm:text-base mb-1">
+          <p className="max-w-2xl text-left text-sm text-slate-600 sm:text-base">
             Learn more about Elite Vapor, your modern vape and smoke shop in Boise, Idaho.
           </p>
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-lg sm:p-8 lg:p-10">
           {/* About Elite Vapor copy + hero image */}
           <section className="grid gap-8 lg:gap-10 lg:grid-cols-[3fr,2fr] lg:items-center">
@@ -84,6 +84,7 @@ export default function AboutPage() {
                 visiting our store.
               </p>
             </div>
+
           </section>
 
           {/* Store interior images */}
