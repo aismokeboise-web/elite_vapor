@@ -7,14 +7,6 @@ import { motion } from "motion/react";
 import { ProductCard } from "@/components/ProductCard";
 import { CardGridSkeleton } from "@/components/Skeleton";
 
-// requestIdleCallback is not in lib.dom.d.ts for older TS versions
-declare global {
-  interface Window {
-    requestIdleCallback?: (cb: IdleRequestCallback, opts?: IdleRequestOptions) => number;
-    cancelIdleCallback?: (id: number) => void;
-  }
-}
-
 const BACKEND =
   typeof window !== "undefined"
     ? process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
@@ -79,9 +71,12 @@ export default function HomePage() {
   // Phase 2: below-fold sections — deferred so they don't block initial paint
   useEffect(() => {
     if (!BACKEND) return;
-    const id = window.requestIdleCallback
-      ? window.requestIdleCallback(() => loadBelowFold(), { timeout: 2000 })
-      : window.setTimeout(() => loadBelowFold(), 800);
+    let id: number;
+    if ((window as any).requestIdleCallback) {
+      id = (window as any).requestIdleCallback(() => loadBelowFold(), { timeout: 2000 });
+    } else {
+      id = window.setTimeout(() => loadBelowFold(), 800);
+    }
 
     function loadBelowFold() {
       Promise.all([
@@ -102,10 +97,10 @@ export default function HomePage() {
     }
 
     return () => {
-      if (window.requestIdleCallback) {
-        window.cancelIdleCallback(id as number);
+      if ((window as any).requestIdleCallback) {
+        (window as any).cancelIdleCallback(id);
       } else {
-        window.clearTimeout(id as number);
+        window.clearTimeout(id);
       }
     };
   }, []);
