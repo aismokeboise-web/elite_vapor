@@ -1,0 +1,57 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          # uncomment if SSH is not on port 22:
+          # port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+
+            cd /var/www/elite  # or /var/www/elite – use the path you actually created
+
+            # Pull latest code (reset any local changes so pull never fails)
+            git fetch --all
+            git checkout main
+            git reset --hard origin/main
+
+            # Build server
+            cd backend
+            npm ci || npm install
+            npx prisma generate
+            npm run lint
+            npm run build
+            
+
+            # Run Prisma migrations against production DB
+            npx prisma migrate deploy
+
+            # Build frontend (Next.js)
+            cd ../frontend
+            npm ci || npm install
+            npm run build
+
+            # Restart backend via PM2
+            cd ../backend
+            pm2 reload elite-backend || pm2 start dist/index.js --name elite-backend --update-env
+
+            # Restart frontend (Next.js) via PM2
+            cd ../frontend
+            pm2 reload elite-frontend || pm2 start npm --name elite-frontend -- start
+
+            pm2 save
