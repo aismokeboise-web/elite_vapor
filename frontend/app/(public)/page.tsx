@@ -2,9 +2,18 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { ProductCard } from "@/components/ProductCard";
 import { CardGridSkeleton } from "@/components/Skeleton";
+
+// requestIdleCallback is not in lib.dom.d.ts for older TS versions
+declare global {
+  interface Window {
+    requestIdleCallback?: (cb: IdleRequestCallback, opts?: IdleRequestOptions) => number;
+    cancelIdleCallback?: (id: number) => void;
+  }
+}
 
 const BACKEND =
   typeof window !== "undefined"
@@ -52,28 +61,53 @@ export default function HomePage() {
   const [newsletterSuccess, setNewsletterSuccess] = useState<string | null>(null);
   const [newsletterError, setNewsletterError] = useState<string | null>(null);
 
+  // Phase 1: critical above-fold data — categories + all products grid
   useEffect(() => {
     if (!BACKEND) return;
     Promise.all([
       fetch(`${BACKEND}/api/categories`).then((r) => (r.ok ? r.json() : [])),
       fetch(`${BACKEND}/api/products`).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${BACKEND}/api/products?is_featured=1`).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${BACKEND}/api/products?is_new=1`).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${BACKEND}/api/products?is_deal=1`).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${BACKEND}/api/products?is_clearance=1`).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${BACKEND}/api/products?is_best_seller=1`).then((r) => (r.ok ? r.json() : [])),
     ])
-      .then(([cat, all, feat, newP, dealP, clearP, best]) => {
+      .then(([cat, all]) => {
         setCategories(Array.isArray(cat) ? cat.slice(0, 6) : []);
         setAllProducts(Array.isArray(all) ? all : []);
-        setFeatured(Array.isArray(feat) ? feat : []);
-        setNewArrivals(Array.isArray(newP) ? newP : []);
-        setDeals(Array.isArray(dealP) ? dealP : []);
-        setClearance(Array.isArray(clearP) ? clearP : []);
-        setBestSellers(Array.isArray(best) ? best : []);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+  }, []);
+
+  // Phase 2: below-fold sections — deferred so they don't block initial paint
+  useEffect(() => {
+    if (!BACKEND) return;
+    const id = window.requestIdleCallback
+      ? window.requestIdleCallback(() => loadBelowFold(), { timeout: 2000 })
+      : window.setTimeout(() => loadBelowFold(), 800);
+
+    function loadBelowFold() {
+      Promise.all([
+        fetch(`${BACKEND}/api/products?is_featured=1`).then((r) => (r.ok ? r.json() : [])),
+        fetch(`${BACKEND}/api/products?is_new=1`).then((r) => (r.ok ? r.json() : [])),
+        fetch(`${BACKEND}/api/products?is_deal=1`).then((r) => (r.ok ? r.json() : [])),
+        fetch(`${BACKEND}/api/products?is_clearance=1`).then((r) => (r.ok ? r.json() : [])),
+        fetch(`${BACKEND}/api/products?is_best_seller=1`).then((r) => (r.ok ? r.json() : [])),
+      ])
+        .then(([feat, newP, dealP, clearP, best]) => {
+          setFeatured(Array.isArray(feat) ? feat : []);
+          setNewArrivals(Array.isArray(newP) ? newP : []);
+          setDeals(Array.isArray(dealP) ? dealP : []);
+          setClearance(Array.isArray(clearP) ? clearP : []);
+          setBestSellers(Array.isArray(best) ? best : []);
+        })
+        .catch(() => {});
+    }
+
+    return () => {
+      if (window.requestIdleCallback) {
+        window.cancelIdleCallback(id as number);
+      } else {
+        window.clearTimeout(id as number);
+      }
+    };
   }, []);
 
   const allRandom6 = useMemo(
@@ -103,58 +137,67 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero: banner.png with animated gradient fallback */}
+      {/* ── Hero Banner ─────────────────────────────────────────────────────── */}
+      {/* The section is position:relative so Next.js <Image fill> works correctly */}
       <section className="relative min-h-[480px] w-full overflow-hidden bg-slate-900 md:min-h-[580px]">
-        {/* Background: banner image with animated fallback */}
-        <div className="absolute inset-0 z-0">
-          <div className="public-banner-animated absolute inset-0" />
-          <img
-            src={BANNER_IMAGE}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-700"
-            onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = "1"; }}
-            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-            loading="eager"
-            fetchPriority="high"
-          />
-        </div>
-        <div className="public-banner-shine" aria-hidden />
-        {/* Strong gradient overlay ensuring text readability */}
+
+        {/* Animated gradient — always visible instantly (CSS only, no JS needed) */}
+        <div className="public-banner-animated absolute inset-0 z-0" aria-hidden />
+        <div className="public-banner-shine absolute inset-0 z-0" aria-hidden />
+
+        {/* Banner image — Next.js Image automatically serves WebP/AVIF.
+            priority=true injects a <link rel="preload"> in <head>.
+            No opacity fade so the image counts for LCP immediately. */}
+        <Image
+          src={BANNER_IMAGE}
+          alt=""
+          fill
+          priority
+          quality={80}
+          sizes="100vw"
+          className="object-cover object-center"
+          style={{ zIndex: 0 }}
+        />
+
+        {/* Gradient overlay for text legibility */}
         <div
-          className="absolute inset-0 z-[1] bg-gradient-to-t from-slate-950/90 via-slate-900/65 to-slate-800/30"
+          className="absolute inset-0 z-[1] bg-gradient-to-t from-slate-950/90 via-slate-900/60 to-slate-800/20"
           aria-hidden
         />
-        {/* Content */}
+
+        {/* Content — z-10 sits above overlay */}
         <div className="relative z-10 mx-auto flex min-h-[480px] max-w-6xl flex-col justify-end px-4 pb-16 pt-32 sm:px-6 md:min-h-[580px] md:pb-28 md:pt-40 lg:px-8">
+
+          {/* Badge — subtle entrance, not LCP-critical so animation is fine */}
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
             className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm"
           >
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
             Boise, Idaho
           </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.05, ease: "easeOut" }}
-            className="text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.7)] sm:text-5xl md:text-6xl lg:text-7xl"
-          >
+
+          {/* H1 — LCP candidate. Rendered immediately (opacity:1, no JS delay).
+              Only the y-position animates so paint happens on first frame. */}
+          <h1 className="banner-heading text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.7)] sm:text-5xl md:text-6xl lg:text-7xl">
             Elite Vapor Vape and Smoke
-          </motion.h1>
+          </h1>
+
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
             className="mt-4 max-w-2xl text-base font-medium text-slate-200 [text-shadow:0_1px_8px_rgba(0,0,0,0.6)] sm:text-lg md:text-xl"
           >
             Your trusted vape shop and smoke shop in Boise, ID for premium vapes, e-liquids, and accessories.
           </motion.p>
+
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.25, ease: "easeOut" }}
+            transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
             className="mt-8 flex flex-wrap gap-3"
           >
             <Link

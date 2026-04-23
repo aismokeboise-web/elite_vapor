@@ -58,7 +58,6 @@ const localBusinessSchema = {
   },
   openingHours: ["Mo-Su 07:00-23:00"],
   priceRange: "$$",
-  servesCuisine: undefined,
   sameAs: [
     "https://www.facebook.com",
     "https://www.instagram.com",
@@ -69,7 +68,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={inter.className}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://maps.google.com" />
         <script
           type="application/ld+json"

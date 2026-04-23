@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "motion/react";
 
 const BACKEND =
   typeof window !== "undefined"
@@ -38,7 +37,7 @@ type ProductCardProps = {
   delay?: number;
 };
 
-export function ProductCard({ product, delay = 0 }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const firstModel = product.models?.[0];
   const img = firstModel?.imageUrls?.[0] ? `${BACKEND}${firstModel.imageUrls[0]}` : PLACEHOLDER_IMAGE;
   const price = firstModel ? firstModel.price : null;
@@ -61,11 +60,7 @@ export function ProductCard({ product, delay = 0 }: ProductCardProps) {
     : flagBadges;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: delay * 0.05 }}
-    >
+    <div className="animate-fade-in-up">
       <Link
         href={`/product/${product.slug || product.id}`}
         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-slate-300 hover:shadow-md"
@@ -75,6 +70,10 @@ export function ProductCard({ product, delay = 0 }: ProductCardProps) {
           <img
             src={img}
             alt={product.name}
+            loading="lazy"
+            decoding="async"
+            width={400}
+            height={224}
             className="block h-full w-full object-contain object-center transition duration-300 group-hover:scale-[1.02]"
           />
           {isDeal && (
@@ -180,6 +179,6 @@ export function ProductCard({ product, delay = 0 }: ProductCardProps) {
           )}
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

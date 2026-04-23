@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductCard } from "@/components/ProductCard";
@@ -38,6 +37,8 @@ function getCategoryGradient(name: string): string {
 
 export function CategoryClient({ id }: { id: string }) {
   const [category, setCategory] = useState<Category | null>(null);
+  // resolvedId is always the real UUID (never a slug) — safe to pass to API filters
+  const [resolvedId, setResolvedId] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -49,32 +50,43 @@ export function CategoryClient({ id }: { id: string }) {
   const [modelId, setModelId] = useState("");
   const [page, setPage] = useState(1);
 
-  const fetchProducts = useCallback(() => {
+  // Step 1: resolve slug/id → real category UUID
+  useEffect(() => {
     if (!id || !BACKEND) return;
+    Promise.all([
+      fetch(`${BACKEND}/api/categories/${id}`).then((r) => (r.ok ? r.json() : null)),
+      fetch(`${BACKEND}/api/categories`).then((r) => (r.ok ? r.json() : [])),
+    ])
+      .then(([cat, cats]) => {
+        setCategory(cat);
+        setCategories(Array.isArray(cats) ? cats : []);
+        // cat.id is always the UUID regardless of whether `id` was a slug
+        if (cat?.id) setResolvedId(cat.id);
+      })
+      .catch(() => { setCategory(null); setCategories([]); });
+  }, [id]);
+
+  // Step 2: fetch brands using the resolved UUID (not the slug)
+  useEffect(() => {
+    if (!resolvedId || !BACKEND) return;
+    fetch(`${BACKEND}/api/brands?categoryId=${resolvedId}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((b) => setBrands(Array.isArray(b) ? b : []))
+      .catch(() => setBrands([]));
+  }, [resolvedId]);
+
+  const fetchProducts = useCallback(() => {
+    if (!resolvedId || !BACKEND) return;
     const q = new URLSearchParams();
-    q.set("categoryId", id);
+    // Always use the real UUID here — the products API filters by categoryId (UUID)
+    q.set("categoryId", resolvedId);
     if (search.trim()) q.set("search", search.trim());
     if (brandId) q.set("brandId", brandId);
     fetch(`${BACKEND}/api/products?${q}`)
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch(() => setProducts([]));
-  }, [id, search, brandId]);
-
-  useEffect(() => {
-    if (!id || !BACKEND) return;
-    Promise.all([
-      fetch(`${BACKEND}/api/categories/${id}`).then((r) => (r.ok ? r.json() : null)),
-      fetch(`${BACKEND}/api/categories`).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${BACKEND}/api/brands?categoryId=${id}`).then((r) => (r.ok ? r.json() : [])),
-    ])
-      .then(([cat, cats, b]) => {
-        setCategory(cat);
-        setCategories(Array.isArray(cats) ? cats : []);
-        setBrands(Array.isArray(b) ? b : []);
-      })
-      .catch(() => { setCategory(null); setCategories([]); setBrands([]); });
-  }, [id]);
+  }, [resolvedId, search, brandId]);
 
   useEffect(() => {
     setLoading(true);

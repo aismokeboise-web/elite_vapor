@@ -36,6 +36,10 @@ function setVerified() {
 }
 
 export function AgeGate({ children }: { children: React.ReactNode }) {
+  // Start as null (unknown). After hydration, check localStorage.
+  // IMPORTANT: We ALWAYS render children immediately so the page content
+  // is visible to crawlers and painted on first render (critical for LCP/FCP).
+  // The overlay is shown ONLY when we confirm the user is NOT verified.
   const [verified, setVerifiedState] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -51,19 +55,16 @@ export function AgeGate({ children }: { children: React.ReactNode }) {
     window.location.href = "https://www.google.com";
   };
 
-  // Wait for client hydration to avoid flash
-  if (verified === null) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600" />
-      </div>
-    );
-  }
-
   return (
     <>
+      {/* Always render page content — critical for FCP, LCP, and SEO crawlability */}
       {children}
-      {!verified && (
+
+      {/* Age-gate overlay appears only AFTER hydration confirms user is not verified.
+          verified === null → hydrating, overlay hidden (content visible briefly)
+          verified === false → overlay shown
+          verified === true → no overlay */}
+      {verified === false && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/90 p-4 backdrop-blur-md sm:p-6"
           role="dialog"
